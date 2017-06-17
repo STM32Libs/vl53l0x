@@ -5,9 +5,15 @@
 namespace tof
 {
     uint8_t const i2c_default_address = 0x52;
+    uint8_t const wrAdd = 0x52;
+    uint8_t const rdAdd = 0x53;
+
     namespace reg
     {
-        uint8_t const validate_0xC0 = 0xC0;
+        uint8_t const validate_Address = 0xC0;
+        uint16_t const validate_Value = 0xEEAA;
+        uint8_t const I2C_Mode = 0x88;
+        uint8_t const VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV = 0x89;
     }
 }
 
@@ -17,9 +23,16 @@ public:
     vl53l0x(Serial *ps,PinName pin_sda, PinName pin_scl);
 
     bool isPresent();
+    void off();
+    void on();
+    void init(bool is_2v8 = true);
+    void dump();
 
 
     //Data transfer functions
+    void        updateReg(uint8_t subAddress, uint8_t and_data, uint8_t or_data);
+    void        setbits(uint8_t subAddress, uint8_t bits);
+    void        clearbits(uint8_t subAddress, uint8_t bits);
     void        writeReg8(uint8_t subAddress, uint8_t data);
     uint8_t     readReg8(uint8_t subAddress);
     void        writeReg16(uint8_t subAddress, uint16_t data);
